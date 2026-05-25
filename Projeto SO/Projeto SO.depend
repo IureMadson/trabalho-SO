@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1779717063 source:c:\users\aluno\documents\pausa.c
+	"pausa.h"
+	<windows.h>
+	<time.h>
+
+1779717066 c:\users\aluno\documents\pausa.h
+
+1779717030 source:c:\users\aluno\documents\system.c
+	"system.h"
+	<stdlib.h>
+	<stdio.h>
+
+1779717034 c:\users\aluno\documents\system.h
+	<windows.h>
+
+1779719981 source:c:\users\aluno\documents\nova pasta\projeto so\main.c
+	"system.h"
+	<stdio.h>
+	<stdlib.h>
+
+1779717066 source:c:\users\aluno\documents\pausa.h
+
+1779717034 source:c:\users\aluno\documents\system.h
+	<windows.h>
+
+1779717063 source:c:\users\aluno\documents\nova pasta\projeto so\pausa.c
+	"pausa.h"
+	<windows.h>
+	<time.h>
+
+1779717066 c:\users\aluno\documents\nova pasta\projeto so\pausa.h
+
+1779717030 source:c:\users\aluno\documents\nova pasta\projeto so\system.c
+	"system.h"
+	<stdlib.h>
+	<stdio.h>
+
+1779717034 c:\users\aluno\documents\nova pasta\projeto so\system.h
+	<windows.h>
+
+1779720163 source:c:\users\aluno\documents\nova pasta\projeto so\nucleo.c
+
