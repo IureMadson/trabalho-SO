@@ -4,16 +4,21 @@
 #include "nucleo.h"
 #include <windows.h>
 
-#DEFINE TAM 10 // TAMANHO DO BUFFER
-#DEFINE 20 // PRODUZIR/CONSUMIR
-LPVOID fiberprincipal;
-STR_DESC_PROC atual;
-
-int buffer[TAM];
-int *in, *out;
-
 int main(){
- fiberprincipal = ConvertThreadToFiber(NULL);
+ int in = 0;
+ int out = 0;
+ inicia_fila_prontos();
+ 
+ inicia_semaforo(cheio, 0);
+ inicia_semaforo(vazio, TAM);
+ inicia_semaforo(mutex, 1);
+ 
+ cria_processo(Produtor, "Produtor");
+ cria_processo(Consumidor, "Consumidor");
+ printf("Sistema pronto. Iniciando escalonador cooperativo...\n");
+ 
+ dispara_sistema();
+ printf("\nSistema finalizado com sucesso.\n");
  
  return 0;
 }
