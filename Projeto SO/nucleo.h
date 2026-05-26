@@ -21,9 +21,12 @@ typedef struct desc_p {
 } DESCRITOR_PROC;
 typedef DESCRITOR_PROC* PTR_DESC_PROC;
 
-
-
-
-
+inicia_fila_prontos();
+cria_processo();
+proximo_ativo_depois();
+processo_trampolim();
+dispara_sistema();
+yield();
+termina_processo();
 
 #endif // NUCLEO_H_INCLUDED
