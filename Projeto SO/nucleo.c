@@ -20,6 +20,10 @@ void inicia_fila_prontos(void){
 
 void cria_processo(void (*end_proc)(void), const char *nome_p){
     DESCRITOR_PROC novo = (DESCRITOR_PROC)malloc(sizeof(DESCRITOR_PROC));
+    if (novo==NULL){
+        printf("Erro na alocacao de memoria!");
+        return;
+    }
     strcpy(novo->nome, nome_p);
     novo->estado = ATIVO;
     novo->codigo = end_proc;
@@ -39,7 +43,6 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
     PTR_DESC_PROC aux;
     //define o ponto inicial da busca (usa prim se a_partir for nulo); 
     if(a_partir==NULL){
-        aux = a_partir->prox_desc;
         aux = prim;
         while(aux!=prim){
             if(aux->estado==ATIVO){
@@ -48,7 +51,7 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
             aux = aux->prox_desc;
         }
     } else {
-        aux = a_partir;
+        aux = a_partir->prox_desc;
         while(aux!=a_partir){
             if(aux->estado==ATIVO){
                 return aux;
