@@ -20,13 +20,14 @@ void inicia_fila_prontos(void){
 
 void cria_processo(void (*end_proc)(void), const char *nome_p){
     DESCRITOR_PROC novo = (DESCRITOR_PROC)malloc(sizeof(DESCRITOR_PROC));
-    //Inicialização dos campos
     strcpy(novo->nome, nome_p);
     novo->estado = ATIVO;
     novo->codigo = end_proc;
     novo->fila_sem= NULL;
     novo->contexto = cria_desc();
     newprocess(processo_trampolim, novo, novo->contexto);
+    prim = novo;
+    novo->prox_desc = novo;
 }
 
 static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
@@ -97,6 +98,8 @@ void yield(void){
         PTR_DESC_PROC antigo = atual;
         atual = prox;
         transfer(antigo->contexto, atual->contexto);
+    } else {
+        return;
     }
 }
 
