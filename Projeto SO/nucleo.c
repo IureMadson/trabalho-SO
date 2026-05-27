@@ -34,12 +34,13 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
     //verifica se a fila circular (prim) existe e não está vazia; 
     if(prim==NULL){
         printf("Fila não existe ou não foi alocada corretamente!");
-        return;
+        return NULL;
     }
-    PTR_DESC_PROC aux = a_partir->prox_desc;
+    PTR_DESC_PROC aux;
     //define o ponto inicial da busca (usa prim se a_partir for nulo); 
     if(a_partir==NULL){
-        PTR_DESC_PROC aux = prim;
+        aux = a_partir->prox_desc;
+        aux = prim;
         while(aux!=prim){
             if(aux->estado==ATIVO){
                 return aux;
@@ -47,11 +48,7 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
             aux = aux->prox_desc;
         }
     } else {
-        if(a_partir==NULL) {
-            printf("Erro!"); 
-            return;
-        }
-        PTR_DESC_PROC aux = a_partir;
+        aux = a_partir;
         while(aux!=a_partir){
             if(aux->estado==ATIVO){
                 return aux;
@@ -99,7 +96,7 @@ void yield(void){
     prox = proximo_ativo_depois(atual);
 
     if(prox!=atual&&prox!=NULL){
-        PTR_DESC_PROC antigo = atual;
+        antigo = atual;
         atual = prox;
         transfer(antigo->contexto, atual->contexto);
     } else {
@@ -114,7 +111,7 @@ void termina_processo(void){
         printf("\nNao ha processos rodando!");
         return;
     }
-    atual = TERMINADO;
+    atual->estado = TERMINADO;
     aux = proximo_ativo_depois(atual);
     if (aux!=atual&&aux!=NULL){
         antigo = atual;
