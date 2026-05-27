@@ -1,3 +1,6 @@
+#ifndef SEMAFORO_H
+#define SEMAFORO_H
+
 typedef struct{
   int s;
   PTR_DESC_PROC Q;
@@ -6,3 +9,5 @@ typedef struct{
 void inicia_semaforo(semaforo *sem, int n);
 void P(semaforo *sem);
 void V(semaforo *sem);
+
+#endif
