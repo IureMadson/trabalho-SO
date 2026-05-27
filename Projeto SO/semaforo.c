@@ -1,3 +1,6 @@
+#include "semaforo.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 void inicia_semaforo(semaforo *sem, int n){
   if (!sem){
