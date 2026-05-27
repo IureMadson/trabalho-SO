@@ -17,14 +17,12 @@ void inicia_fila_prontos(void){
     prim = NULL;
     atual = NULL;
 }
+
 void cria_processo(void (*end_proc)(void), const char *nome_p){
     DESCRITOR_PROC novo = (DESCRITOR_PROC)malloc(sizeof(DESCRITOR_PROC));
-    strcpy(proc->nome, nome_p);
-    novo->estado = ATIVO;
-    novo->contexto = cria_desc();
-    novo->codigo = end_proc;
     
 }
+
 static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
     //verifica se a fila circular (prim) existe e não está vazia; 
     if(prim==NULL){
@@ -52,23 +50,38 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
     }
     return (a_partir->estado == ATIVO) ? a_partir : NULL;
 }
+
 static void processo_trampolim(void* arg){
-    PTR_DESC_PROC qlqr = (PTR_DESC_PROC)*arg;
+    PTR_DESC_PROC aux = (PTR_DESC_PROC)arg;
+    if(aux==NULL||aux->codigo==NULL){
+        printf("\nCodigo ou descritor invalido!");
+        return;
+    }
+    aux->codigo();
+    termina_processo();
 }
+
 void dispara_sistema(void){
     if(prim==NULL){
-        return
+        return;
     }
     system_init_main(main_ctx);
-
-    atual = (prim->estado==ATIVO) ? prim : proximo_ativo_depois(prim);
-
-    if (atual!=NULL){
-        transferir(main_ctx, atual->contexto);
+    main_ready = 1;
+    if(prim->estado==ATIVO){
+        atual = prim;
+    } else {
+        atual = proximo_ativo_depois(prim);
+        if(atual==NULL){
+            printf("\nNenhum processo ativo encontrado!");
+            return;
+        }
     }
+    transfer(main_ctx, atual->contexto);
 }
+
 void yield(void){
     PTR_DESC_PROC prox;
+    PTR_DESC_PROC *antigo;
     if(atual==NULL){
         return;
     }
@@ -80,6 +93,27 @@ void yield(void){
         transfer(antigo->contexto, atual->contexto);
     }
 }
+
 void termina_processo(void){
-    
+    PTR_DESC_PROC aux;
+    if(!atual){
+        printf("\nNao ha processos rodando!");
+        return;
+    }
+    atual = TERMINADO;
+    aux = proximo_estado_ativo(atual);
+    if (aux!=atual&&aux!=NULL){
+        antigo = atual;
+        atual = aux;
+        transfer(antigo->contexto, atual->contexto); // Pode estar errado os parametros REVER DEPOIS
+        free(antigo);
+    }else {
+        printf("\nNão exite mais processos ativos na fila circular!");
+        //VERIFICA SE O PROGRAMA PRINCIPAL ESTÁ PRONTO
+        if(main_ctx){
+            transfer(atual->contexto, main_ctx);
+        } else{
+            printf("\nPrograma principal nao disponivel!");
+        }
+    }
 }
