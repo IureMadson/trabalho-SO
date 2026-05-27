@@ -32,8 +32,8 @@ void P(semaforo* sem){
     aux = sem->Q;
     while(aux->fila_sem){
       aux = aux->fila_sem;
-      aux->fila_sem = atual;
     }
+    aux->fila_sem = atual;
     /* precisa existir alguém ativo para rodar, senão deadlock */ 
     prox = NULL;
     if(prim){
