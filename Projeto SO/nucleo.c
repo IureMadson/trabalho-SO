@@ -47,6 +47,10 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
             aux = aux->prox_desc;
         }
     } else {
+        if(a_partir==NULL) {
+            printf("Erro!"); 
+            return;
+        }
         PTR_DESC_PROC aux = a_partir;
         while(aux!=a_partir){
             if(aux->estado==ATIVO){
@@ -88,13 +92,13 @@ void dispara_sistema(void){
 
 void yield(void){
     PTR_DESC_PROC prox;
-    PTR_DESC_PROC *antigo;
+    PTR_DESC_PROC antigo;
     if(atual==NULL){
         return;
     }
     prox = proximo_ativo_depois(atual);
 
-    if(prox!=atual&&prox==NULL){
+    if(prox!=atual&&prox!=NULL){
         PTR_DESC_PROC antigo = atual;
         atual = prox;
         transfer(antigo->contexto, atual->contexto);
@@ -105,12 +109,13 @@ void yield(void){
 
 void termina_processo(void){
     PTR_DESC_PROC aux;
+    PTR_DESC_PROC antigo;
     if(!atual){
         printf("\nNao ha processos rodando!");
         return;
     }
     atual = TERMINADO;
-    aux = proximo_estado_ativo(atual);
+    aux = proximo_ativo_depois(atual);
     if (aux!=atual&&aux!=NULL){
         antigo = atual;
         atual = aux;
