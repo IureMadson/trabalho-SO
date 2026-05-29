@@ -1,4 +1,7 @@
+#include "system.h"
 #include "semaforo.h"
+#include "pausa.h"
+#include "nucleo.h"
 #include <stdlib.h>
 #include <stdio.h>
 
