@@ -8,6 +8,13 @@
   #error "Esta versão (fibers) foi preparada para Windows (_WIN32)."
 #endif
 
+typedef enum {
+    ATIVO,
+    BLOQ_P,
+    TERMINADO
+
+} ESTADO_PROC;
+
 typedef struct desc_p {
     char nome[35];
     ESTADO_PROC estado;
@@ -20,6 +27,9 @@ typedef struct desc_p {
     void (*codigo)(void);
 } DESCRITOR_PROC;
 typedef DESCRITOR_PROC* PTR_DESC_PROC;
+
+extern PTR_DESC_PROC prim;
+extern PTR_DESC_PROC atual;
 
 void inicia_fila_prontos(void);
 void cria_processo(void (*end_proc)(void), const char *nome_p);
