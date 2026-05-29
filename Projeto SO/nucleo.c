@@ -1,3 +1,6 @@
+#include "system.h"
+#include "semaforo.h"
+#include "pausa.h"
 #include "nucleo.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -19,7 +22,8 @@ void inicia_fila_prontos(void){
 }
 
 void cria_processo(void (*end_proc)(void), const char *nome_p){
-    DESCRITOR_PROC novo = (DESCRITOR_PROC)malloc(sizeof(DESCRITOR_PROC));
+    PTR_DESC_PROC novo;
+    novo = malloc(sizeof(DESCRITOR_PROC));
     if (novo==NULL){
         printf("Erro na alocacao de memoria!");
         return;
@@ -30,26 +34,37 @@ void cria_processo(void (*end_proc)(void), const char *nome_p){
     novo->fila_sem= NULL;
     novo->contexto = cria_desc();
     newprocess(processo_trampolim, novo, novo->contexto);
-    prim = novo;
-    novo->prox_desc = novo;
+    if (prim == NULL) {
+        prim = novo;
+        novo->prox_desc = novo;
+    }
+    else {
+        PTR_DESC_PROC aux;
+        aux = prim;
+        while (aux->prox_desc != prim) {
+            aux = aux->prox_desc;
+        }
+        aux->prox_desc = novo;
+        novo->prox_desc = prim;
+    }
 }
 
 static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
     //verifica se a fila circular (prim) existe e não está vazia; 
     if(prim==NULL){
-        printf("Fila não existe ou não foi alocada corretamente!");
+        printf("Fila nao existe ou não foi alocada corretamente!");
         return NULL;
     }
     PTR_DESC_PROC aux;
     //define o ponto inicial da busca (usa prim se a_partir for nulo); 
     if(a_partir==NULL){
-        aux = prim->prox_desc;
-        while(aux!=prim){
-            if(aux->estado==ATIVO){
+        aux=prim;
+        do {
+            if(aux->estado==ATIVO) {
                 return aux;
             }
             aux = aux->prox_desc;
-        }
+        } while(aux!=prim);
     } else {
         aux = a_partir->prox_desc;
         while(aux!=a_partir){
@@ -122,7 +137,7 @@ void termina_processo(void){
         transfer(antigo->contexto, atual->contexto); // Pode estar errado os parametros REVER DEPOIS
         free(antigo);
     }else {
-        printf("\nNão exite mais processos ativos na fila circular!");
+        printf("\nNao exite mais processos ativos na fila circular!");
         //VERIFICA SE O PROGRAMA PRINCIPAL ESTÁ PRONTO
         if(main_ctx){
             transfer(atual->contexto, main_ctx);
