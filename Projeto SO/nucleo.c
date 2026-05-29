@@ -43,7 +43,7 @@ static PTR_DESC_PROC proximo_ativo_depois(PTR_DESC_PROC a_partir){
     PTR_DESC_PROC aux;
     //define o ponto inicial da busca (usa prim se a_partir for nulo); 
     if(a_partir==NULL){
-        aux = prim;
+        aux = prim->prox_desc;
         while(aux!=prim){
             if(aux->estado==ATIVO){
                 return aux;
