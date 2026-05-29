@@ -1,4 +1,7 @@
 #include "system.h"
+#include "semaforo.h"
+#include "pausa.h"
+#include "nucleo.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -12,7 +15,7 @@ static void __stdcall fiber_entry(void *param)
 
     d->proc(d->arg);
 
-    /* Se retornar, é erro de uso: no núcleo, processos devem terminar via termina_processo(). */
+    /* Se retornar, Ã© erro de uso: no nÃºcleo, processos devem terminar via termina_processo(). */
     fprintf(stderr, "Erro: co-rotina retornou. Use termina_processo() ao final do processo.\n");
     ExitProcess(1);
 }
@@ -25,7 +28,7 @@ void system_init_main(PTR_DESC d_main)
     }
 
     if (d_main->fiber != NULL) {
-        /* já inicializado */
+        /* jÃ¡ inicializado */
         return;
     }
 
@@ -60,7 +63,7 @@ void newprocess(proc_fn proc, void *arg, PTR_DESC d)
     d->proc = proc;
     d->arg  = arg;
 
-    /* CreateFiber(stackSize=0 usa default). Param passa o próprio descritor. */
+    /* CreateFiber(stackSize=0 usa default). Param passa o prÃ³prio descritor. */
     d->fiber = CreateFiber(0, fiber_entry, d);
     if (d->fiber == NULL) {
         fprintf(stderr, "CreateFiber falhou. GetLastError=%lu\n", (unsigned long)GetLastError());
@@ -70,7 +73,7 @@ void newprocess(proc_fn proc, void *arg, PTR_DESC d)
 
 void transfer(PTR_DESC origem, PTR_DESC destino)
 {
-    (void)origem; /* em fibers, o estado da fiber atual é preservado automaticamente */
+    (void)origem; /* em fibers, o estado da fiber atual Ã© preservado automaticamente */
 
     if (!destino || !destino->fiber) {
         fprintf(stderr, "transfer: destino invalido.\n");
